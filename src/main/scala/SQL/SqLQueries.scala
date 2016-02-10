@@ -70,7 +70,6 @@ object SqLQueries extends Logging {
 
 
   def ExecuteUpdate(query: String) = {
-    logger.debug(query)
     try {
       logger.info(s"Update query has been fired.")
       Class.forName(driver)
@@ -103,8 +102,6 @@ object SqLQueries extends Logging {
       case e: Exception =>
         logger.error(s"Could not excecute query to mysql: $e")
         connection.createStatement().executeQuery("")
-    } finally {
-      connection.close()
     }
   }
 }
