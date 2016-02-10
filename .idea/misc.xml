@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="MavenImportPreferences">
+    <option name="generalSettings">
+      <MavenGeneralSettings>
+        <option name="mavenHome" value="Bundled (Maven 3)" />
+      </MavenGeneralSettings>
+    </option>
+  </component>
+  <component name="ProjectLevelVcsManager" settingsEditedManually="false">
+    <OptionsSetting value="true" id="Add" />
+    <OptionsSetting value="true" id="Remove" />
+    <OptionsSetting value="true" id="Checkout" />
+    <OptionsSetting value="true" id="Update" />
+    <OptionsSetting value="true" id="Status" />
+    <OptionsSetting value="true" id="Edit" />
+    <ConfirmationsSetting value="0" id="Add" />
+    <ConfirmationsSetting value="0" id="Remove" />
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_6" default="true" assert-keyword="true" jdk-15="true" />
+  <component name="SbtLocalSettings">
+    <option name="modificationStamps">
+      <map>
+        <entry key="$PROJECT_DIR$/../VVV/couvert-sync" value="1447143205000" />
+        <entry key="$PROJECT_DIR$/../VVV/ndtrc-importer" value="1447321369000" />
+        <entry key="$PROJECT_DIR$/../VVV/ndtrc-sync" value="1447143222000" />
+        <entry key="$PROJECT_DIR$/../VVV/vvv-environments" value="1447082164000" />
+        <entry key="$PROJECT_DIR$/../VVV/vvv-ndtrc-api" value="1450346202000" />
+        <entry key="$PROJECT_DIR$/../VVV/vvv-searchapi" value="1447070500000" />
+        <entry key="$PROJECT_DIR$" value="1454533164000" />
+        <entry key="$PROJECT_DIR$/../sbt-aspectj" value="1447331551000" />
+        <entry key="$PROJECT_DIR$/../vvv-environments" value="1446559801000" />
+        <entry key="$USER_HOME$/Downloads/akka-http-rest-example" value="1449187470000" />
+        <entry key="$USER_HOME$/Downloads/akka-streams-example-master" value="1442312504000" />
+      </map>
+    </option>
+    <option name="externalProjectsViewState">
+      <projects_view />
+    </option>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>
