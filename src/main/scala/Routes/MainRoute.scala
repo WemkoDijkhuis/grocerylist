@@ -17,10 +17,6 @@ trait MainRoute extends Logging {
 
   val CreateAccount = "new_account"
 
-  val UsernameApiuser = "K0@l@B3@r1995JNl1"
-  val PasswordApiUser = "Gr0c3r13sL1stP@ssw0rdS3CuR3d"
-
-
   def routes: Route = {
     pathPrefix(MainPath) {
       {

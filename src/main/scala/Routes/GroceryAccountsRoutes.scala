@@ -1,10 +1,14 @@
 package Routes
 
+import java.sql.ResultSet
+
 import SQL.SqLQueries
 import Util.Logging
 import akka.http.scaladsl.model.{HttpResponse, StatusCodes}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
+import spray.json.DefaultJsonProtocol._
+import spray.json._
 
 object GroceryAccountsRoutes extends Logging {
 
@@ -25,12 +29,27 @@ object GroceryAccountsRoutes extends Logging {
         UpdateAccountById()
     }
 
+  def mapAccounts(rs: ResultSet): List[Map[String, String]] = {
+    var items: List[Map[String, String]] = List[Map[String,String]]()
+    while (rs.next()) {
+      items = items :+ Map(
+        "id" -> rs.getString("id"),
+        "name" -> rs.getString("name"),
+        "email" -> rs.getString("email")
+      )
+    }
+    rs.close()
+    items
+  }
+
   def CreateAccount(): Route = path(CreateAccountPath / Segments(3)) { itemvalues =>
     pathEndOrSingleSlash {
       get {
         complete {
-          SqLQueries.InsertQuery(TableAccountsName, Map("name" -> itemvalues(2), "pass" -> itemvalues(1), "email" -> itemvalues(0)))
-          HttpResponse(StatusCodes.NotFound, entity = "Worstenbroodje")
+          val query = SqLQueries.InsertQuery(TableAccountsName, Map("name" -> itemvalues(2), "pass" -> itemvalues(1), "email" -> itemvalues(0)))
+          val numRows = query.toString.toInt
+          if(numRows > 0) HttpResponse(entity = s"${StatusCodes.Success}: num items adjusted = $numRows")
+          else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
         }
       }
     }
@@ -40,8 +59,10 @@ object GroceryAccountsRoutes extends Logging {
     pathEndOrSingleSlash {
       get {
         complete {
-          SqLQueries.SelectQuery(TableAccountsName, List[String]("id", "name", "email"), ("id", userid))
-          HttpResponse(StatusCodes.NotFound, entity = "Worstenbroodje")
+          val query = SqLQueries.SelectQuery(TableAccountsName, List[String]("id", "name", "email"), ("id", userid))
+          val mappedAccounts = mapAccounts(query)
+          if(mappedAccounts.nonEmpty) HttpResponse(entity = mappedAccounts.toJson.toString)
+          else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
         }
       }
     }
@@ -51,8 +72,10 @@ object GroceryAccountsRoutes extends Logging {
     pathEndOrSingleSlash {
       get {
         complete {
-          SqLQueries.DeleteQuery(TableAccountsName, Map("id" -> userid))
-          HttpResponse(StatusCodes.NotFound, entity = "Worstenbroodje")
+          val query = SqLQueries.DeleteQuery(TableAccountsName, Map("id" -> userid))
+          val numRows = query.toString.toInt
+          if(numRows > 0) HttpResponse(entity = s"${StatusCodes.Success}: num items adjusted = $numRows")
+          else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
         }
       }
     }
@@ -62,8 +85,10 @@ object GroceryAccountsRoutes extends Logging {
     pathEndOrSingleSlash {
       get {
         complete {
-          SqLQueries.UpdateQuery(TableAccountsName, Map("name" -> itemvalues(3), "pass" -> itemvalues(2), "email" -> itemvalues(1)), ("id", itemvalues(0)))
-          HttpResponse(StatusCodes.NotFound, entity = "Worstenbroodje")
+          val query = SqLQueries.UpdateQuery(TableAccountsName, Map("name" -> itemvalues(3), "pass" -> itemvalues(2), "email" -> itemvalues(1)), ("id", itemvalues(0)))
+          val numRows = query.toString.toInt
+          if(numRows > 0) HttpResponse(entity = s"${StatusCodes.Success}: num items adjusted = $numRows")
+          else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
         }
       }
     }

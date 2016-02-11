@@ -1,4 +1,5 @@
 import _root_.spray.revolver.RevolverPlugin.Revolver
+import NativePackagerKeys._
 
 name := "lijst-rest-api"
 
@@ -22,10 +23,14 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-http-core-experimental"          % "2.0.1",
     "com.typesafe.akka" %% "akka-http-experimental"               % "2.0.1",
     "ch.qos.logback"    % "logback-classic"                       % "1.1.2",
-    "mysql"             % "mysql-connector-java"                  % "5.1.38"
+    "mysql"             % "mysql-connector-java"                  % "5.1.38",
+    "io.spray"          %%  "spray-json"                          % "1.3.2"
 
   )
 }
+
+enablePlugins(JavaAppPackaging)
+enablePlugins(SbtNativePackager)
 
 Revolver.settings
 
