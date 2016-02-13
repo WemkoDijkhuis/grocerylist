@@ -1,23 +1,29 @@
 package SQL
 
+import java.io.File
 import java.sql.{Connection, DriverManager, ResultSet}
 import java.util.concurrent.Executors
 
 import Util.Logging
+import com.typesafe.config.ConfigFactory
 
 
 object SqLQueries extends Logging {
 
+  //This gives a Nullpointer but in the main class it works :S
+  val config = ConfigFactory.parseFile(new File(getClass.getResource("sql.conf").getPath))
+
   //TODO set this in a config file
   private val driver = "com.mysql.jdbc.Driver"
-  private val url = "jdbc:mysql://192.168.178.21:9002/Boodschappenlijstjes"
-  private val username = "BoodschapRestApi"
-  private val password = "barfoo"
+  private val url = s"jdbc:mysql://${config.getString("host")}:${config.getString("port")}/${config.getString("database_name")}"
+  private val username = config.getString("username")
+  private val password = config.getString("password")
   val numThreads = 10
 
   var connection: Connection = null
 
   def SelectQuery(table: String, fields: List[String] = List[String]("*"), where: (String, String) = ("", ""), order: String = "", extra: String = "") = {
+    logger.debug("hallo?")
     var query = s"SELECT ${fields.mkString(", ")} FROM $table "
 
     if (where._1 != "") query = query + s"WHERE ${where._1} = \'${where._2}\' "

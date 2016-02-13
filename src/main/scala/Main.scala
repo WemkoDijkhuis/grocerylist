@@ -1,10 +1,13 @@
+import java.io.File
+
 import Routes.MainRoute
-import SQL.SqLQueries
+import SQL.SqLQueries._
 import Util.Logging
 import akka.actor.ActorSystem
 import akka.http.scaladsl.Http
 import akka.http.scaladsl.server.Directives._
 import akka.stream.ActorMaterializer
+import com.typesafe.config.ConfigFactory
 
 object Main extends App with Logging with MainRoute{
   implicit val system = ActorSystem("rest-api")

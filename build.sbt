@@ -1,5 +1,4 @@
 import _root_.spray.revolver.RevolverPlugin.Revolver
-import NativePackagerKeys._
 
 name := "lijst-rest-api"
 
