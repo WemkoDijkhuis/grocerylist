@@ -1,8 +1,9 @@
 import _root_.spray.revolver.RevolverPlugin.Revolver
 
+
 name := "lijst-rest-api"
 
-version := "0.1"
+version := "1.0.1"
 
 scalaVersion := "2.11.7"
 
@@ -16,11 +17,11 @@ resolvers ++= Seq(
 
 libraryDependencies ++= {
   Seq(
-    "com.typesafe.akka" %% "akka-actor"                           % "2.3.11",
-    "com.typesafe.akka" %% "akka-http-experimental"               % "2.0.1",
-    "com.typesafe.akka" %% "akka-stream-experimental"             % "2.0.1",
-    "com.typesafe.akka" %% "akka-http-core-experimental"          % "2.0.1",
-    "com.typesafe.akka" %% "akka-http-experimental"               % "2.0.1",
+    "com.typesafe.akka" %% "akka-actor"                           % "2.3.12",
+    "com.typesafe.akka" %% "akka-http-experimental"               % "2.0.3",
+    "com.typesafe.akka" %% "akka-stream-experimental"             % "2.0.3",
+    "com.typesafe.akka" %% "akka-http-core-experimental"          % "2.0.3",
+    "com.typesafe.akka" %% "akka-http-experimental"               % "2.0.3",
     "ch.qos.logback"    % "logback-classic"                       % "1.1.2",
     "mysql"             % "mysql-connector-java"                  % "5.1.38",
     "io.spray"          %%  "spray-json"                          % "1.3.2"
