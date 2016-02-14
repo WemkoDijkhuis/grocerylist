@@ -5,19 +5,25 @@ import java.sql.{Connection, DriverManager, ResultSet}
 import java.util.concurrent.Executors
 
 import Util.Logging
+import akka.actor.ActorSystem
+import akka.stream.ActorMaterializer
 import com.typesafe.config.ConfigFactory
 
 
 object SqLQueries extends Logging {
+  implicit val system = ActorSystem("rest-api")
+  implicit val mat = ActorMaterializer()
+  implicit val ec = system.dispatcher
 
   //This gives a Nullpointer but in the main class it works :S
-  val config = ConfigFactory.parseFile(new File(getClass.getResource("sql.conf").getPath))
+//  val config = ConfigFactory.parseFile(new File(getClass.getResource("sql.conf").getPath))
+  def config(path: String) = system.settings.config.getConfig(path)
 
   //TODO set this in a config file
   private val driver = "com.mysql.jdbc.Driver"
-  private val url = s"jdbc:mysql://${config.getString("host")}:${config.getString("port")}/${config.getString("database_name")}"
-  private val username = config.getString("username")
-  private val password = config.getString("password")
+  private val url = s"jdbc:mysql://${config("api.sqlsettings").getString("host")}:${config("api.sqlsettings").getString("port")}/${config("api.sqlsettings").getString("database_name")}"
+  private val username = config("api.sqlsettings").getString("username")
+  private val password = config("api.sqlsettings").getString("password")
   val numThreads = 10
 
   var connection: Connection = null
