@@ -9,8 +9,18 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import spray.json._
 import spray.json.DefaultJsonProtocol._
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
+
+
+case class CreateAccountToListParams(locationId: String, userId: String)
+case class DeleteAccountToListParams(locationId: String, userId: String)
+
 
 object GroceryUserToListRoutes extends Logging {
+
+  implicit val createAccountToListJsonMarshal = jsonFormat2(CreateAccountToListParams)
+  implicit val deleteAccountToListJsonMarshal = jsonFormat2(DeleteAccountToListParams)
+
 
   val TableUserListName = "list_users"
 
@@ -28,7 +38,7 @@ object GroceryUserToListRoutes extends Logging {
     }
 
   def mapAccounts(rs: ResultSet): List[Map[String, String]] = {
-    var items: List[Map[String, String]] = List[Map[String,String]]()
+    var items: List[Map[String, String]] = List[Map[String, String]]()
     while (rs.next()) {
       items = items :+ Map(
         "user_id" -> rs.getString("user_id"),
@@ -39,14 +49,17 @@ object GroceryUserToListRoutes extends Logging {
     items
   }
 
-  def CreateAccount(): Route = path(CreateAccountPath / Segments(2)) { itemvalues =>
+
+  def CreateAccount(): Route = path(CreateAccountPath) {
     pathEndOrSingleSlash {
-      get {
-        complete {
-          val query =SqLQueries.InsertQuery(TableUserListName, Map("list_id" -> itemvalues(1), "user_id" -> itemvalues(0)))
-          val numRows = query.toString.toInt
-          if(numRows > 0) HttpResponse(entity = s"${StatusCodes.Success}: num items adjusted = $numRows")
-          else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
+      put {
+        entity(as[CreateAccountToListParams]) { params =>
+          complete {
+            val query = SqLQueries.InsertQuery(TableUserListName, Map("list_id" -> params.locationId, "user_id" -> params.userId))
+            val numRows = query.toString.toInt
+            if (numRows > 0) HttpResponse(entity = s"${StatusCodes.Success}: num items adjusted = $numRows")
+            else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
+          }
         }
       }
     }
@@ -58,21 +71,23 @@ object GroceryUserToListRoutes extends Logging {
         complete {
           val query = SqLQueries.SelectQuery(TableUserListName, List[String]("user_id"), ("list_id", listid))
           val mappedUsertoList = mapAccounts(query)
-          if(mappedUsertoList.nonEmpty) HttpResponse(entity = mappedUsertoList.toJson.toString)
+          if (mappedUsertoList.nonEmpty) HttpResponse(entity = mappedUsertoList.toJson.toString)
           else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
         }
       }
     }
   }
 
-  def DeleteAccountById(): Route = path(DeleteAccountPath / Segments(2)) { userlistvalues =>
+  def DeleteAccountById(): Route = path(DeleteAccountPath) {
     pathEndOrSingleSlash {
-      get {
-        complete {
-          val query = SqLQueries.DeleteQuery(TableUserListName, Map("list_id" -> userlistvalues(1), "user_id" -> userlistvalues(0) ))
-          val numRows = query.toString.toInt
-          if(numRows > 0) HttpResponse(entity = s"${StatusCodes.Success}: num items adjusted = $numRows")
-          else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
+      delete {
+        entity(as[DeleteAccountToListParams]) { params =>
+          complete {
+            val query = SqLQueries.DeleteQuery(TableUserListName, Map("list_id" -> params.locationId, "user_id" -> params.userId))
+            val numRows = query.toString.toInt
+            if (numRows > 0) HttpResponse(entity = s"${StatusCodes.Success}: num items adjusted = $numRows")
+            else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
+          }
         }
       }
     }

@@ -9,8 +9,16 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import spray.json.DefaultJsonProtocol._
 import spray.json._
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
+
+
+case class CreateListParams(name: String, userId: String)
+case class UpdateListParams(name: String, id: String)
 
 object GroceryListRoutes extends Logging {
+
+  implicit val createListJsonMarshal = jsonFormat2(CreateListParams)
+  implicit val updateListJsonMarshal = jsonFormat2(UpdateListParams)
 
   val TableListName = "list"
 
@@ -42,14 +50,16 @@ object GroceryListRoutes extends Logging {
     items
   }
 
-  def CreateList(): Route = path(CreateListPath / Segments(2)) { listvalues =>
+  def CreateList(): Route = path(CreateListPath) {
     pathEndOrSingleSlash {
-      get {
-        complete {
-          val query = SqLQueries.InsertQuery(TableListName, Map("name" -> listvalues(1), "user_id" -> listvalues(0)))
-          val numRows = query.toString.toInt
-          if(numRows > 0) HttpResponse(entity = s"${StatusCodes.Success}: num items adjusted = $numRows")
-          else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
+      put {
+        entity(as[CreateListParams]) { params =>
+          complete {
+            val query = SqLQueries.InsertQuery(TableListName, Map("name" -> params.name, "user_id" -> params.userId))
+            val numRows = query.toString.toInt
+            if (numRows > 0) HttpResponse(entity = s"${StatusCodes.Success}: num items adjusted = $numRows")
+            else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
+          }
         }
       }
     }
@@ -70,7 +80,7 @@ object GroceryListRoutes extends Logging {
 
   def DeleteListById(): Route = path(DeleteListPath / Segment) { listid =>
     pathEndOrSingleSlash {
-      get {
+      delete {
         complete {
           val query = SqLQueries.DeleteQuery(TableListName, Map("id" -> listid))
           val numRows = query.toString.toInt
@@ -81,17 +91,18 @@ object GroceryListRoutes extends Logging {
     }
   }
 
-  def UpdateListById(): Route = path(UpdateListPath / Segments(2)) { listvalues =>
+  def UpdateListById(): Route = path(UpdateListPath) {
     pathEndOrSingleSlash {
-      get {
-        complete {
-          val query = SqLQueries.UpdateQuery(TableListName, Map("name" -> listvalues(1)), ("id", listvalues(0)))
-          val numRows = query.toString.toInt
-          if(numRows > 0) HttpResponse(entity = s"${StatusCodes.Success}: num items adjusted = $numRows")
-          else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
+      post {
+        entity(as[UpdateListParams]) { params =>
+          complete {
+            val query = SqLQueries.UpdateQuery(TableListName, Map("name" -> params.name), ("id", params.id))
+            val numRows = query.toString.toInt
+            if (numRows > 0) HttpResponse(entity = s"${StatusCodes.Success}: num items adjusted = $numRows")
+            else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
+          }
         }
       }
     }
   }
-
 }

@@ -22,6 +22,7 @@ libraryDependencies ++= {
     "com.typesafe.akka" %% "akka-stream-experimental"             % "2.0.3",
     "com.typesafe.akka" %% "akka-http-core-experimental"          % "2.0.3",
     "com.typesafe.akka" %% "akka-http-experimental"               % "2.0.3",
+    "com.typesafe.akka" %% "akka-http-spray-json-experimental"    % "2.0.3",
     "ch.qos.logback"    % "logback-classic"                       % "1.1.2",
     "mysql"             % "mysql-connector-java"                  % "5.1.38",
     "io.spray"          %%  "spray-json"                          % "1.3.2"

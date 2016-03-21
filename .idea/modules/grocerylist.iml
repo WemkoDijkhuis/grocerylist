@@ -39,5 +39,6 @@
     <orderEntry type="library" name="SBT: com.typesafe.akka:akka-stream-experimental_2.11:2.0.3:jar" level="project" />
     <orderEntry type="library" name="SBT: com.typesafe:config:1.2.1:jar" level="project" />
     <orderEntry type="library" name="SBT: com.typesafe.akka:akka-actor_2.11:2.3.12:jar" level="project" />
+    <orderEntry type="library" name="SBT: com.typesafe.akka:akka-http-spray-json-experimental_2.11:2.0.3:jar" level="project" />
   </component>
 </module>

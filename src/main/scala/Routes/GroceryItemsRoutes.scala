@@ -9,8 +9,16 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import spray.json._
 import spray.json.DefaultJsonProtocol._
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
+
+
+case class CreateItemParams(name: String, doneDate: String,  listId: String)
+case class UpdateItemParams(name: String, doneDate: String, id: String)
 
 object GroceryItemsRoutes extends Logging {
+
+  implicit val createItemJsonMarshal = jsonFormat3(CreateItemParams)
+  implicit val updateItemJsonMarshal = jsonFormat3(UpdateItemParams)
 
   val TableItemName = "item"
 
@@ -30,9 +38,9 @@ object GroceryItemsRoutes extends Logging {
     }
 
   def mapItems(rs: ResultSet): List[Map[String, String]] = {
-    var items: List[Map[String, String]] = List[Map[String,String]]()
+    var items: List[Map[String, String]] = List[Map[String, String]]()
     while (rs.next()) {
-       items = items :+ Map(
+      items = items :+ Map(
         "id" -> rs.getString("id"),
         "name" -> rs.getString("name"),
         "done_date" -> rs.getDate("done_date").toString
@@ -42,14 +50,16 @@ object GroceryItemsRoutes extends Logging {
     items
   }
 
-  def CreateItem(): Route = path(CreateItemPath / Segments(3)) { itemvalues =>
+  def CreateItem(): Route = path(CreateItemPath) {
     pathEndOrSingleSlash {
-      get {
-        complete {
-          val query = SqLQueries.InsertQuery(TableItemName, Map("name" -> itemvalues(2), "done_date" -> itemvalues(1), "list_id" -> itemvalues(0)))
-          val numRows = query.toString.toInt
-          if(numRows > 0) HttpResponse(entity = s"${StatusCodes.Success}: num items adjusted = $numRows")
-          else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
+      put {
+        entity(as[CreateItemParams]) { params =>
+          complete {
+            val query = SqLQueries.InsertQuery(TableItemName, Map("name" -> params.name, "done_date" -> params.doneDate, "list_id" -> params.listId))
+            val numRows = query.toString.toInt
+            if (numRows > 0) HttpResponse(entity = s"${StatusCodes.Success}: num items adjusted = $numRows")
+            else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
+          }
         }
       }
     }
@@ -61,7 +71,7 @@ object GroceryItemsRoutes extends Logging {
         complete {
           val query = SqLQueries.SelectQuery(TableItemName, List[String]("id", "name", "done_date"), ("list_id", listid))
           val mappedItems = mapItems(query)
-          if(mappedItems.nonEmpty) HttpResponse(entity = mappedItems.toJson.toString())
+          if (mappedItems.nonEmpty) HttpResponse(entity = mappedItems.toJson.toString())
           else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
         }
       }
@@ -70,25 +80,27 @@ object GroceryItemsRoutes extends Logging {
 
   def DeleteItemById(): Route = path(DeleteItemPath / Segment) { itemid =>
     pathEndOrSingleSlash {
-      get {
+      delete {
         complete {
           val query = SqLQueries.DeleteQuery(TableItemName, Map("id" -> itemid))
           val numRows = query.toString.toInt
-          if(numRows > 0) HttpResponse(entity = s"${StatusCodes.Success}: num items adjusted = $numRows")
+          if (numRows > 0) HttpResponse(entity = s"${StatusCodes.Success}: num items adjusted = $numRows")
           else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
         }
       }
     }
   }
 
-  def UpdateItemById(): Route = path(UpdateItemPath / Segments(3)) { itemvalues =>
+  def UpdateItemById(): Route = path(UpdateItemPath) {
     pathEndOrSingleSlash {
-      get {
-        complete {
-          val query = SqLQueries.UpdateQuery(TableItemName, Map("name" -> itemvalues(2), "done_date" -> itemvalues(1)), ("id", itemvalues(0)))
-          val numRows = query.toString.toInt
-          if(numRows > 0) HttpResponse(entity = s"${StatusCodes.Success}: num items adjusted = $numRows")
-          else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
+      post {
+        entity(as[UpdateItemParams]) { params =>
+          complete {
+            val query = SqLQueries.UpdateQuery(TableItemName, Map("name" -> params.name, "done_date" -> params.doneDate), ("id", params.id))
+            val numRows = query.toString.toInt
+            if (numRows > 0) HttpResponse(entity = s"${StatusCodes.Success}: num items adjusted = $numRows")
+            else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
+          }
         }
       }
     }

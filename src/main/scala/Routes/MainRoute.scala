@@ -1,7 +1,7 @@
 package Routes
 
 import SQL.SqLQueries
-import Util.Logging
+import Util.{CorsHandler, Logging}
 import akka.http.scaladsl.model.{HttpResponse, StatusCodes}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server._
@@ -10,7 +10,7 @@ import akka.http.scaladsl.server.directives.Credentials
 import scala.concurrent.Future
 
 
-trait MainRoute extends Logging {
+trait MainRoute extends Logging with CorsHandler {
 
   val MainPath = "groceries"
   val AppPath = "app"
@@ -18,11 +18,14 @@ trait MainRoute extends Logging {
   val CreateAccount = "new_account"
 
   def routes: Route = {
-    pathPrefix(MainPath) {
-      {
-        authenticateBasic(realm = "secure_api", authenticateUser) { user =>
-          paths
-        } ~ unauthorizedPath
+
+    corsHandler {
+      pathPrefix(MainPath) {
+        {
+          authenticateBasic(realm = "secure_api", authenticateUser) { user =>
+            paths
+          } ~ unauthorizedPath
+        }
       }
     } ~
       errorPath
@@ -31,9 +34,12 @@ trait MainRoute extends Logging {
   def authenticateUser(credentials: Credentials): Option[String] = {
     credentials match {
       case p: Credentials.Provided =>
-        val userInfo = SqLQueries.SelectQuery("user", List[String] ("pass"), ("email", p.identifier))
+        logger.debug("USER:" + p.identifier)
+        val userInfo = SqLQueries.SelectQuery("user", List[String]("pass"), ("email", p.identifier))
         userInfo.next()
-        if(userInfo.first && p.verify(userInfo.getString("pass"))){userInfo.close();Some(p.identifier)}
+        if (userInfo.first && p.verify(userInfo.getString("pass"))) {
+          userInfo.close(); Some(p.identifier)
+        }
         else None
       case _ => None
     }

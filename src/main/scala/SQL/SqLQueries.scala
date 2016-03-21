@@ -29,7 +29,6 @@ object SqLQueries extends Logging {
   var connection: Connection = null
 
   def SelectQuery(table: String, fields: List[String] = List[String]("*"), where: (String, String) = ("", ""), order: String = "", extra: String = "") = {
-    logger.debug("hallo?")
     var query = s"SELECT ${fields.mkString(", ")} FROM $table "
 
     if (where._1 != "") query = query + s"WHERE ${where._1} = \'${where._2}\' "
