@@ -64,11 +64,11 @@ object GroceryAccountsRoutes extends Logging {
     }
   }
 
-  def GetAccountById(): Route = path(GetAccountPath / Segment) { userid =>
+  def GetAccountById(): Route = path(GetAccountPath / Segment) { email =>
     pathEndOrSingleSlash {
       get {
         complete {
-          val query = SqLQueries.SelectQuery(TableAccountsName, List[String]("id", "name", "email"), ("id", userid))
+          val query = SqLQueries.SelectQuery(TableAccountsName, List[String]("id", "name", "email"), ("email", email))
           val mappedAccounts = mapAccounts(query)
           if(mappedAccounts.nonEmpty) HttpResponse(entity = mappedAccounts.toJson.toString)
           else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
