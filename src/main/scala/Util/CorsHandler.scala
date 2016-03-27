@@ -42,7 +42,7 @@ trait CorsHandler {
   //otherwise has to be under addAccessControlHeaders
   private def preflightRequestHandler: Route = options {
     complete(HttpResponse(200).withHeaders(
-      `Access-Control-Allow-Methods`(OPTIONS, POST, PUT, GET, DELETE) :: List[HttpHeader]( `Access-Control-Allow-Headers`(corsAllowedHeaders.mkString(", ")))
+      `Access-Control-Allow-Methods`(OPTIONS, POST, PUT, GET, DELETE) :: List[HttpHeader]( `Access-Control-Allow-Headers`(corsAllowedHeaders.mkString(", ")), `Access-Control-Allow-Origin`(corsAllowedHeaders.mkString(", ")))
     )
     )
   }
