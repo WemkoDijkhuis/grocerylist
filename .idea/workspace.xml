@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="719311c0-2e89-4240-b127-db9ba64c7792" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/build.sbt" afterPath="$PROJECT_DIR$/build.sbt" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/src/main/scala/Util/CorsHandler.scala" afterPath="$PROJECT_DIR$/src/main/scala/Util/CorsHandler.scala" />
     </list>
     <ignored path="grocerylist.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -95,11 +95,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="CorsHandler.scala" pinned="false" current-in-tab="false">
+      <file leaf-file-name="CorsHandler.scala" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/main/scala/Util/CorsHandler.scala">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.0">
-              <caret line="54" column="3" selection-start-line="54" selection-start-column="3" selection-end-line="54" selection-end-column="3" />
+            <state vertical-scroll-proportion="0.7183099">
+              <caret line="53" column="31" selection-start-line="53" selection-start-column="31" selection-end-line="53" selection-end-column="31" />
               <folding>
                 <element signature="e#14#59#0" expanded="true" />
               </folding>
@@ -107,11 +107,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="build.sbt" pinned="false" current-in-tab="true">
+      <file leaf-file-name="build.sbt" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/build.sbt">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.17605634">
-              <caret line="5" column="17" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
+            <state vertical-scroll-proportion="0.0">
+              <caret line="20" column="75" selection-start-line="20" selection-start-column="4" selection-end-line="20" selection-end-column="75" />
               <folding />
             </state>
           </provider>
@@ -177,7 +177,6 @@
         <option value="$PROJECT_DIR$/src/main/scala/Main.scala" />
         <option value="$PROJECT_DIR$/project/plugins.sbt" />
         <option value="$PROJECT_DIR$/src/main/scala/Routes/MainRoute.scala" />
-        <option value="$PROJECT_DIR$/src/main/scala/Util/CorsHandler.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/SQL/SqLQueries.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/Routes/GroceryListRoutes.scala" />
         <option value="$PROJECT_DIR$/src/main/scala/Routes/GroceryItemsRoutes.scala" />
@@ -186,6 +185,7 @@
         <option value="$PROJECT_DIR$/src/main/scala/Routes/GroceryAccountsRoutes.scala" />
         <option value="$PROJECT_DIR$/.gitignore" />
         <option value="$PROJECT_DIR$/build.sbt" />
+        <option value="$PROJECT_DIR$/src/main/scala/Util/CorsHandler.scala" />
       </list>
     </option>
   </component>
@@ -716,7 +716,7 @@
     </recent_temporary>
   </component>
   <component name="SbtLocalSettings">
-    <option name="lastUpdateTimestamp" value="1459104317667" />
+    <option name="lastUpdateTimestamp" value="1459104350328" />
     <option name="availableProjects">
       <map>
         <entry>
@@ -1263,21 +1263,21 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/scala/Util/CorsHandler.scala">
+    <entry file="file://$PROJECT_DIR$/build.sbt">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.0">
-          <caret line="54" column="3" selection-start-line="54" selection-start-column="3" selection-end-line="54" selection-end-column="3" />
-          <folding>
-            <element signature="e#14#59#0" expanded="true" />
-          </folding>
+          <caret line="20" column="75" selection-start-line="20" selection-start-column="4" selection-end-line="20" selection-end-column="75" />
+          <folding />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/build.sbt">
+    <entry file="file://$PROJECT_DIR$/src/main/scala/Util/CorsHandler.scala">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.17605634">
-          <caret line="5" column="17" selection-start-line="5" selection-start-column="17" selection-end-line="5" selection-end-column="17" />
-          <folding />
+        <state vertical-scroll-proportion="0.7183099">
+          <caret line="53" column="31" selection-start-line="53" selection-start-column="31" selection-end-line="53" selection-end-column="31" />
+          <folding>
+            <element signature="e#14#59#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
