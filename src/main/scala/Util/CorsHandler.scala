@@ -47,7 +47,7 @@ trait CorsHandler {
     )
   }
 
-  val corsAllowedHeaders: List[String] = List("Authorization")
+  val corsAllowedHeaders: List[String] = List("Authorization", "Origin", "X-Requested-With", "Content-Type", "Accept", "Accept-Encoding", "Accept-Language", "Host", "Referer", "User-Agent")
 
 
   def corsHandler(r: Route) = addAccessControlHeaders {
