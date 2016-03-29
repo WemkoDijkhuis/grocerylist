@@ -9,7 +9,7 @@ import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
 import spray.json.DefaultJsonProtocol._
 import spray.json._
-
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 
 case class CreateListParams(name: String, userId: String)
 case class UpdateListParams(name: String, id: String)
