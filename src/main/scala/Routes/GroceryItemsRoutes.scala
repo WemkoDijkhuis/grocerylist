@@ -4,12 +4,12 @@ import java.sql.ResultSet
 
 import SQL.SqLQueries
 import Util.Logging
+import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 import akka.http.scaladsl.model.{HttpResponse, StatusCodes}
 import akka.http.scaladsl.server.Directives._
 import akka.http.scaladsl.server.Route
-import spray.json._
 import spray.json.DefaultJsonProtocol._
-import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
+import spray.json._
 
 
 case class CreateItemParams(name: String, doneDate: String,  listId: String)
@@ -43,7 +43,7 @@ object GroceryItemsRoutes extends Logging {
       items = items :+ Map(
         "id" -> rs.getString("id"),
         "name" -> rs.getString("name"),
-        "done_date" -> rs.getDate("done_date").toString
+        "done_date" -> rs.getTimestamp("done_date").toString
       )
     }
     rs.close()
