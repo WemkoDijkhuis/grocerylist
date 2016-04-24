@@ -16,7 +16,7 @@ case class CreateAccountToListParams(locationId: String, userId: String)
 case class DeleteAccountToListParams(locationId: String, userId: String)
 
 
-object GroceryUserToListRoutes extends Logging {
+object GroceryListUsersRoutes extends Logging {
 
   implicit val createAccountToListJsonMarshal = jsonFormat2(CreateAccountToListParams)
   implicit val deleteAccountToListJsonMarshal = jsonFormat2(DeleteAccountToListParams)
@@ -71,7 +71,7 @@ object GroceryUserToListRoutes extends Logging {
     pathEndOrSingleSlash {
       get {
         complete {
-          val query = SqLQueries.SelectQuery(TableUserListName, List[String]("user_id"), ("list_id", listid))
+          val query = SqLQueries.SelectQuery(TableUserListName, List[String]("*"), ("list_id", listid))
           val mappedUsertoList = mapAccounts(query)
           if (mappedUsertoList.nonEmpty) HttpResponse(entity = mappedUsertoList.toJson.toString)
           else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
@@ -84,7 +84,7 @@ object GroceryUserToListRoutes extends Logging {
     pathEndOrSingleSlash {
       get {
         complete {
-          val query = SqLQueries.SelectQuery(TableUserListName, List[String]("list_id"), ("user_id", userid))
+          val query = SqLQueries.SelectQuery(TableUserListName, List[String]("*"), ("user_id", userid))
           val mappedUsertoList = mapAccounts(query)
           if (mappedUsertoList.nonEmpty) HttpResponse(entity = mappedUsertoList.toJson.toString)
           else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")

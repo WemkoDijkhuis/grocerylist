@@ -50,7 +50,7 @@ trait MainRoute extends Logging with CorsHandler {
       GroceryListRoutes.routes ~
         GroceryItemsRoutes.routes ~
         GroceryAccountsRoutes.routes ~
-        GroceryUserToListRoutes.routes
+        GroceryListUsersRoutes.routes
     }
   }
 
