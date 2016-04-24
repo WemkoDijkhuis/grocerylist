@@ -24,17 +24,19 @@ object GroceryUserToListRoutes extends Logging {
 
   val TableUserListName = "list_users"
 
-  val GroceryAccountsRouteName = "groceryusertolist"
+  val GroceryAccountsRouteName = "grocerylistusers"
 
-  val GetUsersFromList = "guseraccount"
-  val CreateAccountPath = "nuseraccount"
-  val DeleteAccountPath = "duseraccount"
+  val GetUsersFromList = "gluusers"
+  val GetListsFromUser = "glulists"
+  val CreateAccountPath = "nlu"
+  val DeleteAccountPath = "dlu"
 
   def routes: Route =
     pathPrefix(GroceryAccountsRouteName) {
-      GetAccountById() ~
-        CreateAccount() ~
-        DeleteAccountById()
+      CreateListUser() ~
+        GetUsersByListId() ~
+        GetListsByUserId() ~
+        DeleteListUser()
     }
 
   def mapAccounts(rs: ResultSet): List[Map[String, String]] = {
@@ -50,7 +52,7 @@ object GroceryUserToListRoutes extends Logging {
   }
 
 
-  def CreateAccount(): Route = path(CreateAccountPath) {
+  def CreateListUser(): Route = path(CreateAccountPath) {
     pathEndOrSingleSlash {
       put {
         entity(as[CreateAccountToListParams]) { params =>
@@ -65,7 +67,7 @@ object GroceryUserToListRoutes extends Logging {
     }
   }
 
-  def GetAccountById(): Route = path(GetUsersFromList / Segment) { listid =>
+  def GetUsersByListId(): Route = path(GetUsersFromList / Segment) { listid =>
     pathEndOrSingleSlash {
       get {
         complete {
@@ -78,7 +80,20 @@ object GroceryUserToListRoutes extends Logging {
     }
   }
 
-  def DeleteAccountById(): Route = path(DeleteAccountPath) {
+  def GetListsByUserId(): Route = path(GetListsFromUser / Segment) { userid =>
+    pathEndOrSingleSlash {
+      get {
+        complete {
+          val query = SqLQueries.SelectQuery(TableUserListName, List[String]("list_id"), ("user_id", userid))
+          val mappedUsertoList = mapAccounts(query)
+          if (mappedUsertoList.nonEmpty) HttpResponse(entity = mappedUsertoList.toJson.toString)
+          else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
+        }
+      }
+    }
+  }
+
+  def DeleteListUser(): Route = path(DeleteAccountPath) {
     pathEndOrSingleSlash {
       delete {
         entity(as[DeleteAccountToListParams]) { params =>
