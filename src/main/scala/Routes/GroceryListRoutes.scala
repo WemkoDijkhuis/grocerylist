@@ -11,14 +11,16 @@ import spray.json.DefaultJsonProtocol._
 import spray.json._
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 
-case class CreateListParams(name: String, userId: String)
-
 case class GetListsParams(listIds: Option[List[String]])
+
+case class CreateListParams(name: String, userId: String)
 
 case class UpdateListParams(name: String, id: String)
 
+
 object GroceryListRoutes extends Logging {
 
+  implicit val getListsJsonMarshal = jsonFormat1(GetListsParams)
   implicit val createListJsonMarshal = jsonFormat2(CreateListParams)
   implicit val updateListJsonMarshal = jsonFormat2(UpdateListParams)
 
