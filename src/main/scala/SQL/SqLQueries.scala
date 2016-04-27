@@ -38,6 +38,26 @@ object SqLQueries extends Logging {
     ExecuteQuery(query)
   }
 
+  def SelectMultipleQuery(table: String, fields: List[String] = List[String]("*"), where: (String, List[String]) = ("", List[String]("")), order: String = "", extra: String = "") = {
+    var query = s"SELECT ${fields.mkString(", ")} FROM $table "
+
+    if (where._1 != null) query = query + s"WHERE ${where._1} IN ${createWhereMultipleString(where._2)}"
+    if (order != "") query = query + s"ORDER BY $order "
+    if (extra != "") query = query + extra
+
+    ExecuteQuery(query)
+  }
+
+  def createWhereMultipleString(whereValues: List[String]) : String = {
+    var returnString = "("
+
+    for(whereValue <- whereValues){
+      returnString = returnString + s"\'$whereValue\',"
+    }
+
+    returnString.dropRight(1) + ")"
+  }
+
   def InsertQuery(table: String, values: Map[String, String]) = {
     var query = s"INSERT INTO $table "
     var columnList = List[String]()

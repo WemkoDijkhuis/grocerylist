@@ -11,11 +11,13 @@ import spray.json.DefaultJsonProtocol._
 import spray.json._
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 
+case class GetAccountsParams(listIds: Option[List[String]])
 case class CreateAccountParams(name: String, pass: String, email: String)
 case class UpdateAccountParams(name: String, pass: String, email: String, id: String)
 
 object GroceryAccountsRoutes extends Logging {
 
+  implicit val getAccountsJsonMarshal = jsonFormat1(GetAccountsParams)
   implicit val createAccountJsonMarshal = jsonFormat3(CreateAccountParams)
   implicit val updateAccountJsonMarshal = jsonFormat4(UpdateAccountParams)
 
@@ -24,6 +26,7 @@ object GroceryAccountsRoutes extends Logging {
   val GroceryAccountsRouteName = "groceryaccounts"
 
   val GetAccountPath = "gaccount"
+  val GetMultipleAccountsPath = "gmaccount"
   val CreateAccountPath = "naccount"
   val DeleteAccountPath = "daccount"
   val UpdateAccountPath = "uaccount"
@@ -31,6 +34,7 @@ object GroceryAccountsRoutes extends Logging {
   def routes: Route =
     pathPrefix(GroceryAccountsRouteName) {
       GetAccountById() ~
+        GetAccountsByIds() ~
         CreateAccount() ~
         DeleteAccountById() ~
         UpdateAccountById()
@@ -72,6 +76,21 @@ object GroceryAccountsRoutes extends Logging {
           val mappedAccounts = mapAccounts(query)
           if(mappedAccounts.nonEmpty) HttpResponse(entity = mappedAccounts.toJson.toString)
           else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
+        }
+      }
+    }
+  }
+
+  def GetAccountsByIds(): Route = path(GetMultipleAccountsPath) {
+    pathEndOrSingleSlash {
+      entity(as[GetAccountsParams]) { params =>
+        get {
+          complete {
+            val query = SqLQueries.SelectMultipleQuery(TableAccountsName, List[String]("id", "name", "email"), ("email", params.listIds.orNull))
+            val mappedAccounts = mapAccounts(query)
+            if (mappedAccounts.nonEmpty) HttpResponse(entity = mappedAccounts.toJson.toString)
+            else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
+          }
         }
       }
     }

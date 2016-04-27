@@ -12,6 +12,9 @@ import spray.json._
 import akka.http.scaladsl.marshallers.sprayjson.SprayJsonSupport._
 
 case class CreateListParams(name: String, userId: String)
+
+case class GetListsParams(listIds: Option[List[String]])
+
 case class UpdateListParams(name: String, id: String)
 
 object GroceryListRoutes extends Logging {
@@ -24,6 +27,7 @@ object GroceryListRoutes extends Logging {
   val GroceryListRouteName = "grocerylists"
 
   val GetListsPath = "glist"
+  val GetMultipleListsPath = "gmlists"
   val CreateListPath = "nlist"
   val DeleteListPath = "dlist"
   val UpdateListPath = "ulist"
@@ -31,14 +35,15 @@ object GroceryListRoutes extends Logging {
   def routes: Route =
     pathPrefix(GroceryListRouteName) {
       GetListsByAccount() ~
-      CreateList() ~
-      DeleteListById() ~
-      UpdateListById()
+        GetListsByListIds() ~
+        CreateList() ~
+        DeleteListById() ~
+        UpdateListById()
     }
 
 
   def mapLists(rs: ResultSet): List[Map[String, String]] = {
-    var items: List[Map[String, String]] = List[Map[String,String]]()
+    var items: List[Map[String, String]] = List[Map[String, String]]()
     while (rs.next()) {
       items = items :+ Map(
         "id" -> rs.getString("id"),
@@ -70,8 +75,23 @@ object GroceryListRoutes extends Logging {
         complete {
           val query = SqLQueries.SelectQuery(TableListName, List[String]("id", "name"), ("user_id", userid))
           val mappedLists = mapLists(query)
-          if(mappedLists.nonEmpty) HttpResponse(entity = mappedLists.toJson.toString)
+          if (mappedLists.nonEmpty) HttpResponse(entity = mappedLists.toJson.toString)
           else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
+        }
+      }
+    }
+  }
+
+  def GetListsByListIds(): Route = path(GetMultipleListsPath) {
+    pathEndOrSingleSlash {
+      entity(as[GetListsParams]) { params =>
+        get {
+          complete {
+            val query = SqLQueries.SelectMultipleQuery(TableListName, List[String]("id", "name"), ("id", params.listIds.orNull))
+            val mappedLists = mapLists(query)
+            if (mappedLists.nonEmpty) HttpResponse(entity = mappedLists.toJson.toString)
+            else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
+          }
         }
       }
     }
@@ -83,7 +103,7 @@ object GroceryListRoutes extends Logging {
         complete {
           val query = SqLQueries.DeleteQuery(TableListName, Map("id" -> listid))
           val numRows = query.toString.toInt
-          if(numRows > 0) HttpResponse(entity = s"${StatusCodes.Success}: num items adjusted = $numRows")
+          if (numRows > 0) HttpResponse(entity = s"${StatusCodes.Success}: num items adjusted = $numRows")
           else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
         }
       }
@@ -105,3 +125,4 @@ object GroceryListRoutes extends Logging {
     }
   }
 }
+
