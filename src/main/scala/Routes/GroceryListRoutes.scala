@@ -87,7 +87,7 @@ object GroceryListRoutes extends Logging {
   def GetListsByListIds(): Route = path(GetMultipleListsPath) {
     pathEndOrSingleSlash {
       entity(as[GetListsParams]) { params =>
-        get {
+        post {
           complete {
             val query = SqLQueries.SelectMultipleQuery(TableListName, List[String]("id", "name"), ("id", params.listIds.orNull))
             val mappedLists = mapLists(query)

@@ -84,7 +84,7 @@ object GroceryAccountsRoutes extends Logging {
   def GetAccountsByIds(): Route = path(GetMultipleAccountsPath) {
     pathEndOrSingleSlash {
       entity(as[GetAccountsParams]) { params =>
-        get {
+        post {
           complete {
             val query = SqLQueries.SelectMultipleQuery(TableAccountsName, List[String]("id", "name", "email"), ("email", params.listIds.orNull))
             val mappedAccounts = mapAccounts(query)
