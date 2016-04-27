@@ -86,7 +86,7 @@ object GroceryAccountsRoutes extends Logging {
       entity(as[GetAccountsParams]) { params =>
         post {
           complete {
-            val query = SqLQueries.SelectMultipleQuery(TableAccountsName, List[String]("id", "name", "email"), ("email", params.listIds.orNull))
+            val query = SqLQueries.SelectMultipleQuery(TableAccountsName, List[String]("id", "name", "email"), ("id", params.listIds.orNull))
             val mappedAccounts = mapAccounts(query)
             if (mappedAccounts.nonEmpty) HttpResponse(entity = mappedAccounts.toJson.toString)
             else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")

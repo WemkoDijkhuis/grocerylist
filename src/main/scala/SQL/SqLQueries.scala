@@ -41,7 +41,7 @@ object SqLQueries extends Logging {
   def SelectMultipleQuery(table: String, fields: List[String] = List[String]("*"), where: (String, List[String]) = ("", List[String]("")), order: String = "", extra: String = "") = {
     var query = s"SELECT ${fields.mkString(", ")} FROM $table "
 
-    if (where._1 != null) query = query + s"WHERE ${where._1} IN ${createWhereMultipleString(where._2)}"
+    if (where._2 != null) query = query + s"WHERE ${where._1} IN ${createWhereMultipleString(where._2)}"
     if (order != "") query = query + s"ORDER BY $order "
     if (extra != "") query = query + extra
 
