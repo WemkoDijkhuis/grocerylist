@@ -89,7 +89,7 @@ object GroceryListRoutes extends Logging {
       entity(as[GetListsParams]) { params =>
         post {
           complete {
-            val query = SqLQueries.SelectMultipleQuery(TableListName, List[String]("id", "name"), ("id", params.listIds.orNull))
+            val query = SqLQueries.SelectMultipleQuery(TableListName, List[String]("id", "name", "user_id"), ("id", params.listIds.orNull))
             val mappedLists = mapLists(query)
             if (mappedLists.nonEmpty) HttpResponse(entity = mappedLists.toJson.toString)
             else HttpResponse(StatusCodes.NotFound, entity = s"${StatusCodes.NotFound}: ${StatusCodes.NotFound.defaultMessage}")
