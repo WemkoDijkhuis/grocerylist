@@ -49,7 +49,8 @@ object GroceryListRoutes extends Logging {
     while (rs.next()) {
       items = items :+ Map(
         "id" -> rs.getString("id"),
-        "name" -> rs.getString("name")
+        "name" -> rs.getString("name"),
+        "user_id" -> rs.getString("user_id")
       )
     }
     rs.close()

@@ -3,7 +3,7 @@ import _root_.spray.revolver.RevolverPlugin.Revolver
 
 name := "lijst-rest-api"
 
-version := "1.2.0"
+version := "1.2.2"
 
 scalaVersion := "2.11.7"
 
